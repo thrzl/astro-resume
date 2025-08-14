@@ -13,16 +13,12 @@
     "@fontsource-variable/inter-tight": "^5.2.6",
     "@playform/compress": "^0.2.0",
     "astro": "^5.11.0",
-    "astro-robots-txt": "^1.0.0",
     "toml": "^3.0.0",
     "yocto-spinner": "^1.0.0"
   },
   "devDependencies": {
     "@inquirer/prompts": "^7.8.2",
     "@types/bun": "^1.2.20",
-    "@types/html-pdf-node": "^1.0.2",
-    "html-pdf-node": "^1.0.8",
-    "inquirer-date-prompt": "^3.0.0",
     "puppeteer": "^24.16.1"
   }
 }
