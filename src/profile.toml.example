@@ -1,0 +1,33 @@
+dark = true
+
+[profile]
+
+# prefix and first name will not be broken
+prefix = "Dr."
+first_name = "John"
+
+# last name and suffix will also not be broken
+last_name = "Doe"
+suffix = "Jr."
+
+email = "john.doe@gmail.com"
+phone = "+1 (123) 456-7890"
+
+[profile.pronouns] # optional altogether
+nominative = "he"
+oblique = "him"
+possessive = "his"
+
+[categories]
+
+# order which they will be displayed in. anything not listed will go after these in alphabetical order
+order = ["work", "projects", "awards"]
+
+# proper titles of sections. by default, they will be converted into title-case.
+[categories.translations]
+work = "Work Experience"
+awards = "Awards & Certifications"
+
+# these would be redundant:
+# projects = "Projects"
+# other-things = "Other Things"

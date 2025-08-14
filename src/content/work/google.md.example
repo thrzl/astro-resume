@@ -1,0 +1,13 @@
+---
+company: "Google"
+role: "Research & Development"
+startdate: 2017-06-07
+
+# this is optional; if not specified, becomes "Present"
+# enddate: 2025-08-14
+
+# also optional
+# url: "https://google.com"
+---
+
+you can also add body content.

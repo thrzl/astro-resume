@@ -1,0 +1,92 @@
+---
+import type { Config } from "../lib/config"
+
+const {name} = Astro.props
+
+const {prefix, first_name, last_name, suffix, pronouns, email, phone}: Config["profile"] = name
+
+const otherInfoExists = pronouns || phone || email
+---
+
+<header class="h-card">
+    <div class="header-name-container">
+        <h1 class="p-name">{prefix &&<span>{prefix}&nbsp;</span>}{first_name} {last_name}{suffix && <span>&nbsp;{suffix}</span>}</h1>
+    </div>
+    {
+    otherInfoExists && <div class="other-info">
+        {pronouns && <p><span class="p-x-pronoun-nominative">{pronouns.nominative}</span> / <span class="p-x-pronoun-oblique">him</span> / <span class="p-x-pronoun-posessive">his</span></p>}
+        {phone && <p>{phone}</p>}
+        {email && <p>{email}</p>}
+    </div>
+    }
+
+</header>
+
+<style>
+.other-info > p {
+    margin: 0;
+}
+
+.other-info {
+    font-weight: bold;
+    margin-top: 0.5rem
+}
+
+
+span {
+    white-space: nowrap
+}
+
+h1 {
+        font-size: 3.75rem;
+        line-height: 1;
+        margin: 0;
+        text-wrap: wrap;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        hyphens: auto !important
+}
+
+header {
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: solid 1px;
+    border-bottom-color: inherit;
+
+    max-width: 700px;
+    width: 100%;
+
+    margin-top: 6rem;
+    margin-bottom: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+
+    padding-bottom: 1rem;
+}
+
+.header-name-container {
+    flex-direction: row;
+    column-gap: 0.5rem;
+    align-items: flex-end;
+    justify-content: space-between
+}
+
+@media (min-width: 1024px) {
+    header, .header-name-container {
+        display: flex;
+    }
+
+    .other-info {
+        text-align: right
+    }
+
+}
+
+@media print {
+  * {
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+  }
+}
+</style>

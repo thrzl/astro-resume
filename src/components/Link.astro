@@ -1,0 +1,31 @@
+---
+const {href, rel} = Astro.props as {href: string, rel: string}
+import LinkSVG from "../components/link2.svg"
+---
+
+<a {href} {rel} target="_blank">
+    <slot/><LinkSVG stroke-width="3px" height="1em"/>
+</a>
+
+<style>
+span {
+    font-size: 1.17em; font-weight: bold
+}
+a {
+    color: inherit;
+    width: max-content;
+    display: flex;
+    align-items: flex-end;
+    text-decoration: none
+}
+
+@media print {
+    a {
+        color: black;
+    }
+    span {
+        display: none
+    }
+}
+
+</style>

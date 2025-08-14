@@ -1,0 +1,55 @@
+---
+import Link from "./Link.astro"
+
+type DatedEntryProps = {title: string, description: string, startDate: Date, endDate: Date | null, html: string | null, noEndDate: boolean, url: string }
+const { title, description, startDate, endDate, html, noEndDate, url } = Astro.props as DatedEntryProps
+const startYear = startDate.getFullYear()
+const endYear = endDate ? endDate.getFullYear() : (noEndDate ? startYear : "Present")
+---
+
+<div class="entry">
+    <div class="entry-header">
+        <div class="entry-titles">
+            {url ? <Link href={url}> <h3 style="line-height: 1">{title}</h3></Link> : <span>{title}</span>}
+            <h4>{description}</h4>
+        </div>
+        <h4 class="dates">{startYear !== endYear ? `${startYear} - ${endYear}` : startYear}</h4>
+    </div>
+    {html ? <Fragment set:html={html}/> : <></>}
+</div>
+
+<style>
+h4 {
+    font-weight: normal;
+}
+span {
+    font-size: 1.17em;
+    font-weight: bold
+}
+
+* {
+    margin: 0
+}
+
+.entry {
+    margin-bottom: 2rem;
+    break-inside: avoid;
+}
+
+.entry-titles {
+    max-width: 75%
+}
+
+.entry-header {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.dates {
+    min-width: 25%;
+    text-align: right;
+    font-weight: bold
+}
+</style>

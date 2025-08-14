@@ -1,0 +1,135 @@
+---
+import { getCollection } from "astro:content";
+import DatedEntry from "../components/DatedEntry.astro"
+import Header from "../components/Header.astro"
+import '@fontsource-variable/inter-tight';
+import type { CollectionEntry } from "astro:content";
+import config, { type Config } from "../lib/config"
+
+function titleCase(text: string) {
+  function upperCaseWord(word: string) {
+      return `${word[0].toUpperCase()}${word.slice(1)}`
+  }
+  text = text.split(" ").map(upperCaseWord).join(" ")
+  return text.split("-").map(upperCaseWord).join(" ")
+}
+
+const headings: Record<string, string> = config.categories.translations || {}
+
+const buildTimeDate = new Date()
+const entries = (await getCollection("entries")).sort((a, b) => -((a.data.enddate ?? buildTimeDate).getTime() - (b.data.enddate ?? buildTimeDate).getTime()))
+
+const sortedData: Map<string, CollectionEntry<"entries">[]> = new Map()
+for (const entry of entries) {
+  if (!entry.filePath) continue
+  const category = entry.filePath.split("/").slice(-2, -1)[0]
+  sortedData.set(category, sortedData.get(category)?.concat(entry) || [entry])
+}
+
+const sectionIndexes: Record<string, number> = config.categories.order.reduce((acc: Record<string, number>, value: string, index: number) => {
+  acc[value] = index + 1; // +1 for 1-based indexing
+  return acc;
+}, {});
+
+const categories = Array.from(sortedData.keys()).sort((prev, key) => (sectionIndexes[prev] || 9999) - (sectionIndexes[key] || 9999))
+
+function generateFullName(profile: Config["profile"]) {
+  let fullName = ""
+  for (const value of [profile.prefix, profile.first_name, profile.last_name, profile.suffix]) {
+    if (value) fullName += `${value} `
+  }
+  return fullName.trim()
+}
+---
+
+<html lang="en" {...(config.dark ? {class: "dark"}: {})}>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <title>{generateFullName(config.profile)}</title>
+    </head>
+    <body>
+        <div id="m-container">
+            <Header name={config.profile}/>
+            <main>
+            <div id="main-content">
+                {categories.map(category => (
+                <section id={(headings[category] || category).toLowerCase().replaceAll(" ", "-")}>
+                    <h2>{titleCase(headings[category] || category)}</h2>
+                    {sortedData.get(category)!.map(entry => (
+                        <DatedEntry
+                            title={category !== "awards" ? entry.data.company: entry.data.role}
+                            description={category !== "awards" ? entry.data.role: `from ${entry.data.company}`}
+                            url={entry.data.url}
+                            html={entry.rendered?.html}
+                            startDate={entry.data.startdate}
+                            endDate={entry.data.enddate}
+                            type={category}
+                            />
+                        )
+                    )}
+                </section>
+                ))}
+            </div>
+            </main>
+        </div>
+    </body>
+</html>
+
+<style>
+@page {
+  margin-top: 1in;
+  margin-bottom: 1in;
+}
+
+html.dark {
+    background: black;
+    color: white
+}
+
+h2 {
+  break-after: avoid;
+  page-break-after: avoid;
+  font-size: 1.875rem;
+  line-height: 2.25rem
+}
+
+@media print {
+    html {
+        color: black !important;
+        background: none !important
+    }
+
+    section:last-child {
+        /* genuinely zero clue why this is necessary */
+        padding-top: 2.5rem;
+    }
+}
+
+div#m-container > * {
+    max-width: 700px;
+    width: 100%;
+    margin: auto;
+}
+
+h2 {
+    margin-bottom: 0.75rem;
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+}
+
+div#m-container {
+    margin: 0 5rem;
+}
+
+.content {
+    @apply mx-4
+}
+
+* {
+    font-family: "Inter Tight", "Helvetica Neue", sans-serif;
+    margin: 0
+}
+</style>
