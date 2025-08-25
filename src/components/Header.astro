@@ -10,7 +10,7 @@ const otherInfoExists = pronouns || phone || email
 
 <header class="h-card">
     <div class="header-name-container">
-        <h1 class="p-name">{prefix &&<span>{prefix}&nbsp;</span>}{first_name} {last_name}{suffix && <span>&nbsp;{suffix}</span>}</h1>
+        <h1 class="p-name">{prefix &&<span>{prefix}&nbsp;</span>}{first_name} {last_name}{suffix && <>&nbsp;<span>{suffix}</span></>}</h1>
     </div>
     {
     otherInfoExists && <div class="other-info">
