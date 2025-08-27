@@ -16,8 +16,16 @@ function titleCase(text: string) {
 
 const headings: Record<string, string> = config.categories.translations || {}
 
+function entrySortFunction(a: CollectionEntry<"entries">, b: CollectionEntry<"entries">) {
+   if (!(a.data.enddate || b.data.enddate)) {
+     return -((a.data.startdate ?? buildTimeDate).getTime() - (b.data.startdate ?? buildTimeDate).getTime())
+   }
+   return -((a.data.enddate ?? buildTimeDate).getTime() - (b.data.enddate ?? buildTimeDate).getTime())
+}
+
 const buildTimeDate = new Date()
-const entries = (await getCollection("entries")).sort((a, b) => -((a.data.enddate ?? buildTimeDate).getTime() - (b.data.enddate ?? buildTimeDate).getTime()))
+const entries = (await getCollection("entries")).sort(entrySortFunction)
+
 
 const sortedData: Map<string, CollectionEntry<"entries">[]> = new Map()
 for (const entry of entries) {
